@@ -45,6 +45,7 @@ import array
 import argparse
 from sys import platform
 
+audio_tx_rate_trusdx = 4800
 audio_tx_rate = 11520  #11521
 audio_rx_rate = 7812
 buf = []    # buffer for received audio
@@ -142,8 +143,10 @@ def play_receive_audio(pastream):
         if config['verbose']: raise
 
 def tx_cat_delay(ser):
+    ser.reset_output_buffer() # because trusdx TX buffers can be full, empty host buffers (but reset_output_buffer does not seem to work)
     ser.flush()  # because trusdx TX buffers can be full, wait until all buffers are empty
-    time.sleep(0.003 + config['block_size']/audio_tx_rate) # time.sleep(0.01) and wait a bit before interrupting TX stream for a CAT cmd
+    #time.sleep(0.003 + config['block_size']/audio_tx_rate) # time.sleep(0.01) and wait a bit before interrupting TX stream for a CAT cmd
+    time.sleep(0.0005 + 32/audio_tx_rate_trusdx) # and wait until trusdx buffers are read
 
 def handle_vox(samples8, ser):
     if (128 - min(samples8)) == 64 and (max(samples8) - 127) == 64: # if does contain very loud signal
@@ -194,6 +197,7 @@ def handle_cat(pastream, ser, cat):
         ser.write(d)                # fwd data on CAT port to trx
         ser.flush()
         if d.startswith(b"TX"):
+           #ser.reset_input_buffer()
            status[0] = True
            #log("***TX mode")
            pastream.stop_stream()
@@ -214,7 +218,7 @@ def transmit_audio_via_serial(pastream, ser, cat):
             if (status[0] or config['vox']) and pastream.get_read_available() > 0:    # in TX mode, and audio available
                 samples = pastream.read(config['block_size'], exception_on_overflow = False)
                 arr = array.array('h', samples)
-                samples8 = bytearray([128 + x//512 for x in arr])  # Win7 only support 16 bits input audio -> convert to 8 bits
+                samples8 = bytearray([128 + x//256 for x in arr])  # was //512 because with //256 there is 5dB too much signal. Win7 only support 16 bits input audio -> convert to 8 bits
                 samples8 = samples8.replace(b'\x3b', b'\x3a')      # filter ; of stream
                 if status[0]: ser.write(samples8)
                 if config['vox']: handle_vox(samples8)
@@ -355,8 +359,9 @@ def run():
            log("fd closed")
         ser2.close()
         ser.close()
-        in_stream.close()
-        out_stream.close()           
+        #in_stream.close()
+        #out_stream.close()
+        pyaudio.PyAudio().terminate()
         log("Closed")
     except Exception as e:
         log(e)
