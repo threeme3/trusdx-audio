@@ -43,7 +43,7 @@ Start a digital modes app (e.g WSJT-X) and select in Radio settings:
 - PTT Method:  either CAT, or DTR/RTS with port COM8
 - In Audio tab, select: for Input: `CABLE Output`, and for Output: `CABLE Input`
 
-## Installation Linux
+## Installation Linux / MacOS
 
 * Download `trusdx-txrx.py`
 ```
@@ -51,31 +51,40 @@ curl https://raw.githubusercontent.com/threeme3/trusdx-audio/main/trusdx-txrx.py
 chmod a+x trusdx-txrx.py
 ```
 
-* Install pre-requisites PulseAudio, PortAudio, Python 3 and extra libraries: `pyserial` and `pyaudio`, e.g:
+* On Linux, install pre-requisites PulseAudio, PortAudio, e.g:
 ```
 sudo apt install pulseaudio pavucontrol portaudio19-dev python3 python3-pip
-python3 -m pip install --upgrade pip
-python3 -m pip install pyaudio pyserial
 ```
 
-* Create a new virtual audio device:
+* On MacOS install Python and PortAudio using [brew](https://brew.sh/), e.g:
+```
+brew install python
+brew install portaudio
+```
+
+* Create a new virtual audio device on Linux...:
 ```
 sudo modprobe snd-aloop
 pactl load-module module-null-sink sink_name=TRUSDX sink_properties=device.description="TRUSDX"
 ```
 
+* ...or on MacOS:  
+Go to [BlackHole loopback driver](https://github.com/ExistentialAudio/BlackHole) page and follow its installation instructions. Remember to install a 2-channels flavour.
+
 * Run the script in terminal:
 ```python3 trusdx-txrx.py -v```.
 
-* Use `pavucontrol` to assign the newly created `TRUSDX` audio device to the application you'd like to use for transmitting and receiving (or do that from the application itself, if it includes audio settings - WSJT-X does).
+* (Linux) Use `pavucontrol` to assign the newly created `TRUSDX` audio device to the application you'd like to use for transmitting and receiving (or do that from the application itself, if it includes audio settings - WSJT-X does).
 
 Start a digital modes app (e.g WSJT-X) and select in Radio settings:
 - Rig: Kendwood TS-480 (or 440 if not available)
 - Poll Interval: 80
-- Serial Port: /dev/pts/x  (lookup in terminal which /dev/pts port is offered)
+- Serial Port: /dev/pts/x (on Linux) or /dev/ttysxxx (on MacOS, you might have to type it manually). Lookup in terminal which /dev/pts or /dev/ttys port is offered.
 - Baud Rate: 115200
-- PTT Method:  either CAT, or DTR/RTS with port /dev/pts/x
-- In Audio tab, select: for Input: `TRUSDX` audio device, and for Output: `TRUSDX` audio device
+- PTT Method:  either CAT, or DTR/RTS with port /dev/pts/x or /dev/ttysxxx
+- In Audio tab, select:
+  - on Linux: `TRUSDX` input audio device and `TRUSDX` output audio device
+  - on MacOS: `BlackHole 2ch` input audio device and `BlackHole 2ch` output audio device
 
 ## Notes
 This software is experimental, no warranty or service included.

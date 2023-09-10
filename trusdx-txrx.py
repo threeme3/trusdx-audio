@@ -265,7 +265,11 @@ def run():
            loopback_serial_dev   = "COM9"
            cat_serial_dev        = "COM8"
         elif platform == "darwin":
-           log("OS X not implemented yet")
+           virtual_audio_dev_out = "BlackHole 2ch"
+           virtual_audio_dev_in  = "BlackHole 2ch"
+           trusdx_serial_dev     = "USB Serial"
+           loopback_serial_dev   = ""
+           cat_serial_dev        = ""
 
         if config['direct']:
            virtual_audio_dev_out = "" # default audio device
