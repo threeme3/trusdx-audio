@@ -29,7 +29,7 @@ You'll need a Windows 8/10/11 or Linux PC (Raspberry PI 3 or better should be fi
 
 * Download the .EXE file from the [Releases page](https://github.com/threeme3/trusdx-audio/releases). Browser might warn about potential unsafe download, you can ignore this by selecting 'Keep'.
 
-* Run the setup and follow instructions. Again Windows Protection might give a warning, you can ignore by selecting 'More info' and 'Run anyway'.
+* Run the setup and follow instructions. Again Windows Protection might give a warning, you can ignore by selecting 'More info' and 'Run anyway'. There might even be a virus warning, in such case disable Windows Protection completely as this is unjustified, the runtime is safe.
 
 * Connect the (tr)uSDX to the USB port, set volume to 10
 
