@@ -56,6 +56,11 @@ chmod a+x trusdx-txrx.py
 sudo apt install pulseaudio pavucontrol portaudio19-dev python3 python3-pip
 ```
 
+on newest Ubuntu versions you might need to remove pre-installed software that could interfere with serial port, e.g:
+```
+sudo apt remove modem-manager brltty
+```
+
 * On MacOS install Python and PortAudio using [brew](https://brew.sh/), e.g:
 ```
 brew install python
