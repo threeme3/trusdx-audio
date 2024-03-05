@@ -54,6 +54,7 @@ chmod a+x trusdx-txrx.py
 * On Linux, install pre-requisites PulseAudio, PortAudio, e.g:
 ```
 sudo apt install pulseaudio pavucontrol portaudio19-dev python3 python3-pip
+sudo pip install pyaudio serial pyserial
 ```
 
 on newest Ubuntu versions you might need to remove pre-installed software that could interfere with serial port, e.g:
