@@ -222,7 +222,7 @@ def transmit_audio_via_serial(pastream, ser, cat):
                 samples8 = bytearray([128 + x//256 for x in arr])  # was //512 because with //256 there is 5dB too much signal. Win7 only support 16 bits input audio -> convert to 8 bits
                 samples8 = samples8.replace(b'\x3b', b'\x3a')      # filter ; of stream
                 if status[0]: ser.write(samples8)
-                if config['vox']: handle_vox(samples8)
+                if config['vox']: handle_vox(samples8, ser)
             else:
                 time.sleep(0.001)
     except Exception as e:
